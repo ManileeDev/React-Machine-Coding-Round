@@ -1,24 +1,32 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
+import AlbumsList from './AlbumsList';
+import Album from './Album';
+
 
 function App() {
+
+  const [datas, setDatas] = useState([])
+  const [selectedAlbum,setSelectedAlbum] = useState(null)
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/photos")
+    .then(res => res.json())
+    .then(res => setDatas(res))
+    .catch(err => console.log(err))
+  },[])
+  const albumIds = [...new Set(datas.map(data => data.albumId))]
+  
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Photo Albums</h1>
+      <AlbumsList albumIds={albumIds} setSelectedAlbum={setSelectedAlbum} />
+      {selectedAlbum && (
+        <Album selectedAlbum={selectedAlbum} datas={datas}/>
+      )}
     </div>
+   
   );
 }
 
