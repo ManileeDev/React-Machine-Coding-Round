@@ -1,23 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import { throttle } from "lodash";
+import { useCallback, useRef } from "react";
 
 function App() {
+  const circleRef = useRef(null)
+  
+  const handleMouseMove = useCallback(throttle((e) => {
+    const circle = circleRef.current;
+    if(circle){
+      circle.style.left = `${e.clientX}px`;
+      circle.style.top = `${e.clientY}px`
+    }
+},100),[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" onMouseMove={handleMouseMove}>
+       <div className="circle-style" ref={circleRef}></div>
     </div>
   );
 }
